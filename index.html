@@ -441,7 +441,7 @@
   }
 
   /* ---------- 金幣與店長小舖 ---------- */
-  let coins=0, owned={}, equipped={}, ownedBg={bg_default:true}, activeBg='bg_default', ownedAvatar={av_default:true}, activeAvatar='av_default', unlocked={z1:true,z2:true,z3:true,z4:true};
+  let coins=0, owned={}, equipped={}, ownedBg={bg_default:true}, activeBg='bg_default', ownedAvatar={av_default:true}, activeAvatar='av_default', unlocked={z1:true,z2:true,z3:true,z4:true,z11:true,z5:true};
   const shopGoods=[
     {id:'hat',e:'🎩',name:'帽子',price:5},
     {id:'glasses',e:'👓',name:'眼鏡',price:8},
@@ -488,6 +488,7 @@
     {id:'av_monkey',name:'猴子',price:15,type:'emoji',emoji:'🐵'},
     {id:'av_lion',name:'獅子',price:15,type:'emoji',emoji:'🦁'},
     {id:'av_unicorn',name:'彩虹獨角獸',price:0,type:'emoji',emoji:'🦄',limited:true,starReq:30},
+    {id:'av_master',name:'點心神龍',price:0,type:'emoji',emoji:'🐉',limited:true,allClear:true},
   ];
   function updateCoins(){ $("coins").textContent=coins; }
   function addCoin(){ coins++; updateCoins(); saveCoins(); }
@@ -541,7 +542,8 @@
         const on=activeAvatar===a.id;
         action='<button class="shop-btn '+(on?'equipped':'')+'" data-av="'+a.id+'">'+(on?'使用中':'使用')+'</button>';
       }else if(a.limited){
-        action='<button class="shop-btn" disabled>集滿 '+a.starReq+'★</button>';
+        const req = a.allClear ? '全部通關解鎖' : ('集滿 '+a.starReq+'★');
+        action='<button class="shop-btn" disabled>'+req+'</button>';
       }else if(coins>=a.price){
         action='<button class="shop-btn buy" data-avbuy="'+a.id+'">買（'+a.price+'🪙）</button>';
       }else{
@@ -1210,7 +1212,7 @@
     try{ const r=await store.get('shop'); if(r&&r.value){ const s=JSON.parse(r.value); owned=s.owned||{}; equipped=s.equipped||{}; ownedBg=s.ownedBg||{bg_default:true}; activeBg=s.activeBg||'bg_default'; ownedAvatar=s.ownedAvatar||{av_default:true}; activeAvatar=s.activeAvatar||'av_default'; } }catch(e){}
     try{ const r=await store.get('unlocked'); if(r&&r.value){ unlocked=JSON.parse(r.value); } }catch(e){}
     try{ const r=await store.get('musicOn'); if(r&&r.value!=null) musicOn=(r.value!=='0'); }catch(e){}
-    unlocked.z1=true; unlocked.z2=true; unlocked.z3=true; unlocked.z4=true;
+    unlocked.z1=true; unlocked.z2=true; unlocked.z3=true; unlocked.z4=true; unlocked.z11=true; unlocked.z5=true;
   }
   function saveNick(){ try{ if(store) store.set('nickname',nickname); }catch(e){} }
   function saveProgress(){ try{ if(store) store.set('correctCounts',JSON.stringify(progress)); }catch(e){} }
@@ -1246,7 +1248,11 @@
   function zoneStars(id){ return Math.min(10,Math.floor((progress[id]||0)/5)); }
   function checkRewards(){
     let won=false;
-    avatarGoods.forEach(a=>{ if(a.limited && !ownedAvatar[a.id] && totalStars()>=a.starReq){ ownedAvatar[a.id]=true; won=true; } });
+    avatarGoods.forEach(a=>{
+      if(!a.limited || ownedAvatar[a.id]) return;
+      const ok = a.allClear ? zones.every(z=>zoneStars(z.id)>=1) : (a.starReq && totalStars()>=a.starReq);
+      if(ok){ ownedAvatar[a.id]=true; won=true; }
+    });
     shopGoods.forEach(g=>{ if(g.exclusive && !owned[g.id] && zoneStars(g.zone)>=10){ owned[g.id]=true; won=true; } });
     if(won){ saveShop(); heartRain(); confetti(); winSound(); }
   }
@@ -1255,7 +1261,7 @@
   function renderMap(){
     const box=$("zones"); box.innerHTML="";
     zones.forEach((z,idx)=>{
-      const cost = idx<=3 ? 0 : (idx-3)*5, open=(idx<=3)||unlocked[z.id];
+      const cost = idx<=5 ? 0 : (idx-5)*5, open=(idx<=5)||unlocked[z.id];
       const icon='<div class="z-icon">'+z.icon+'</div><div class="z-name">'+z.name+'</div><div class="z-sub">'+z.sub+'</div>';
       let el;
       if(open){
