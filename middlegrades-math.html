@@ -22,7 +22,7 @@
       radial-gradient(1200px 700px at 80% -10%, #2a1d6b 0%, transparent 55%),
       radial-gradient(900px 600px at 10% 110%, #0e2a55 0%, transparent 60%),
       linear-gradient(160deg,var(--space-0),var(--space-1));
-    display:flex;justify-content:center;align-items:stretch;
+    display:flex;justify-content:center;align-items:center;
     padding:0;min-height:100%;
   }
   .game{
@@ -35,26 +35,49 @@
 
   .game.cover .hud, .game.cover .panel{display:none}
 
+  /* 桌機（寬螢幕）：把遊戲呈現為置中的手機外框，不影響手機直式 */
+  @media (min-width:480px){
+    body{padding:20px}
+    .game{
+      height:min(calc(100dvh - 40px), 860px);
+      border:1px solid rgba(120,160,255,.28);
+      border-radius:28px;
+      box-shadow:0 28px 80px -22px rgba(0,0,0,.75), inset 0 1px 0 rgba(255,255,255,.06);
+    }
+  }
+
   /* HUD */
-  .hud{display:flex;align-items:center;align-content:center;gap:8px;padding:6px 12px;flex-wrap:wrap;
+  .hud{display:flex;align-items:center;align-content:center;gap:10px;padding:6px 14px;flex-wrap:wrap;
     flex:0 0 auto;height:56px;overflow:hidden;
     background:linear-gradient(180deg,rgba(20,32,80,.6),transparent)}
-  .stat{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-dim);font-weight:700}
+  .stat{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-dim);font-weight:700;white-space:nowrap}
   .stat b{color:var(--ink);font-size:17px;font-family:'Baloo 2',var(--font);font-weight:800}
-  .cores{display:flex;gap:3px;flex-wrap:wrap;max-width:120px}
-  .core-pip{width:13px;height:13px;border-radius:50%;
-    background:radial-gradient(circle at 35% 30%,var(--cyan-soft),var(--cyan));
-    box-shadow:0 0 8px var(--cyan)}
-  .core-pip.gone{background:#2a335f;box-shadow:none;opacity:.5}
+  #waveNum{display:inline-block;min-width:62px;text-align:left}
+  #minerals{display:inline-block;min-width:42px;text-align:left}
+  .stat.big{font-size:16px}
+  .stat.big b{font-size:23px}
+  .crystal-ic{filter:drop-shadow(0 0 6px rgba(120,200,255,.7));flex:0 0 auto}
+  .cells{display:flex;gap:4px;align-items:center}
+  .core-pip{width:10px;height:20px;border-radius:4px;
+    background:linear-gradient(180deg,var(--cyan-soft),var(--cyan));
+    box-shadow:0 0 8px var(--cyan), inset 0 1px 0 rgba(255,255,255,.5)}
+  .core-pip.gone{background:#27305c;box-shadow:none;opacity:.5}
   .hud-right{margin-left:auto;display:flex;align-items:center;gap:8px}
   @keyframes pulse{50%{box-shadow:0 0 26px rgba(255,194,61,.9)}}
   .icon-btn{border:1px solid rgba(120,160,255,.3);background:#1a2350;color:var(--ink);
-    width:34px;height:34px;border-radius:10px;font-size:15px;cursor:pointer;line-height:1}
+    width:32px;height:32px;border-radius:9px;font-size:15px;cursor:pointer;line-height:1;flex:0 0 auto}
   .icon-btn:active{transform:scale(.94)}
-  /* 建造工具列 */
-  .buildbar{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:8px;
-    padding:10px 12px;background:linear-gradient(0deg,rgba(8,14,40,.92),rgba(8,14,40,.55) 70%,transparent);
-    flex-wrap:wrap}
+  /* 建造工具列（佈署期顯示於底部面板，不覆蓋戰場） */
+  .buildbar{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;gap:12px;padding:10px 14px;
+    background:linear-gradient(180deg,rgba(8,14,40,.55),rgba(8,14,40,.9));border-radius:14px}
+  .bb-info{font-size:15px;color:var(--cyan-soft);font-weight:800;text-align:center;line-height:1.3}
+  .tw-desc{position:absolute;left:14px;right:14px;top:10px;pointer-events:none;
+    background:rgba(10,18,46,.92);border:1px solid rgba(120,170,255,.3);border-radius:12px;
+    padding:8px 12px;font-size:14px;font-weight:700;line-height:1.45;color:var(--ink);
+    text-align:center;box-shadow:0 8px 22px -10px rgba(0,0,0,.7)}
+  .tw-desc b{color:var(--gold)}
+  .bb-palette{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
   .buildbar.hide{display:none}
   .tw-btn{border:1px solid rgba(120,170,255,.35);border-radius:11px;padding:8px 12px;
     font-family:var(--font);font-weight:700;font-size:16px;color:var(--ink);
@@ -74,7 +97,7 @@
   @keyframes waveIn{0%{opacity:0;transform:translateX(-50%) scale(.7)}20%,70%{opacity:1;transform:translateX(-50%) scale(1)}100%{opacity:0}}
 
   /* Question panel */
-  .panel{padding:10px 14px 16px;flex:0 0 auto}
+  .panel{padding:10px 14px 16px;flex:0 0 auto;position:relative}
   .flavor{font-size:14px;color:var(--cyan-soft);font-weight:700;text-align:center;
     height:20px;line-height:20px;overflow:hidden;white-space:nowrap;opacity:.9}
   .prompt{font-size:54px;font-weight:800;text-align:center;margin:6px 0 12px;
@@ -108,6 +131,39 @@
   .overlay .big-emoji{font-size:42px;line-height:1}
   .overlay .mode-row{margin-top:8px}
   .overlay .btn{margin-top:6px}
+
+  /* ===== 介紹頁動畫 ===== */
+  .intro{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;max-width:360px;
+    position:relative;z-index:2}
+  .intro-stars{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  .intro-stars i{position:absolute;width:3px;height:3px;border-radius:50%;background:#bff7ff;
+    box-shadow:0 0 6px #7fdcff;opacity:.7;animation:twinkle 2.4s infinite ease-in-out}
+  @keyframes twinkle{0%,100%{opacity:.2;transform:scale(.6)}50%{opacity:1;transform:scale(1.2)}}
+  .intro-rocket{font-size:58px;line-height:1;animation:floaty 3s ease-in-out infinite;filter:drop-shadow(0 8px 18px rgba(120,160,255,.5))}
+  @keyframes floaty{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-12px) rotate(2deg)}}
+  .intro-title{font-size:34px;font-weight:800;font-family:'Baloo 2',var(--font);letter-spacing:2px;
+    background:linear-gradient(90deg,#bff7ff,#a78bff,#34e0a1,#bff7ff);background-size:300% 100%;
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    animation:titleGlow 4s linear infinite, popIn .6s ease both}
+  @keyframes titleGlow{0%{background-position:0% 50%}100%{background-position:300% 50%}}
+  @keyframes popIn{0%{opacity:0;transform:scale(.7)}100%{opacity:1;transform:scale(1)}}
+  .intro-sub{color:var(--cyan-soft);font-size:14px;font-weight:700;opacity:0;animation:fadeUp .6s .25s ease both}
+  .rule{display:flex;align-items:flex-start;gap:11px;text-align:left;width:100%;
+    background:linear-gradient(180deg,rgba(46,230,240,.1),rgba(46,230,240,.03));
+    border:1px solid rgba(120,170,255,.28);border-radius:14px;padding:11px 13px;
+    opacity:0;transform:translateX(-26px);animation:slideIn .55s ease both}
+  .rule .ri{font-size:24px;line-height:1.1;flex:0 0 auto}
+  .rule .rt{font-size:13.5px;line-height:1.4;color:var(--ink)}
+  .rule .rt b{color:var(--gold)}
+  .rule:nth-child(1){animation-delay:.35s}
+  .rule:nth-child(2){animation-delay:.5s}
+  .rule:nth-child(3){animation-delay:.65s}
+  .rule:nth-child(4){animation-delay:.8s}
+  @keyframes slideIn{0%{opacity:0;transform:translateX(-26px)}100%{opacity:1;transform:translateX(0)}}
+  @keyframes fadeUp{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
+  .intro .btn{margin-top:6px;opacity:0;animation:fadeUp .5s 1s ease both,
+    btnPulse 1.6s 1.5s ease-in-out infinite}
+  @keyframes btnPulse{0%,100%{box-shadow:0 0 18px rgba(46,230,240,.4)}50%{box-shadow:0 0 30px rgba(46,230,240,.85)}}
   .btn{border:none;border-radius:14px;padding:13px 26px;font-family:var(--font);font-weight:800;
     font-size:17px;color:#08122e;cursor:pointer;
     background:linear-gradient(180deg,var(--cyan-soft),var(--cyan));
@@ -152,9 +208,9 @@
 
 <div class="game" id="game">
   <div class="hud">
-    <div class="stat">波次 <b id="waveNum">1/3</b></div>
-    <div class="stat">基地 <span class="cores" id="cores"></span></div>
-    <div class="stat">💎 <b id="minerals">300</b></div>
+    <div class="stat big">波次 <b id="waveNum">1/3</b></div>
+    <div class="stat big">基地 <span class="cells" id="cores"></span></div>
+    <div class="stat">💎 <b id="minerals">100</b></div>
     <div class="hud-right">
       <button class="icon-btn" id="toMenuBtn" title="回關卡選單（保留進度）">≡</button>
       <button class="icon-btn" id="muteBtn" title="音效開關">🔊</button>
@@ -164,13 +220,6 @@
   <div class="field-wrap">
     <canvas id="field"></canvas>
     <div class="wave-toast" id="waveToast"></div>
-
-    <div class="buildbar hide" id="buildbar">
-      <button class="tw-btn sel" data-tw="tower_laser">🔫 雷射 <b>100</b></button>
-      <button class="tw-btn" data-tw="tower_emp">📡 電磁 <b>150</b></button>
-      <span class="bb-hint">選砲塔點據點建造 · 點砲塔可升級擊退</span>
-      <button class="btn small" id="toDefenseBtn">▶ 開始防禦</button>
-    </div>
 
     <div class="overlay" id="overlay">
       <div class="big-emoji">🚀</div>
@@ -184,6 +233,18 @@
     <div class="prompt" id="prompt">準備就緒</div>
     <div class="choices" id="choices"></div>
     <div class="hint" id="hint"></div>
+
+    <div class="buildbar hide" id="buildbar">
+      <div class="tw-desc" id="twDesc"></div>
+      <div class="bb-info" id="bbInfo">佈署期 · 蓋砲塔後開始防禦</div>
+      <div class="bb-palette">
+        <button class="tw-btn sel" data-tw="tower_laser">🔫 雷射 <b>100</b></button>
+        <button class="tw-btn" data-tw="tower_emp">📡 電磁 <b>150</b></button>
+        <button class="tw-btn" data-tw="tower_pulse">🌀 脈衝 <b>350</b></button>
+      </div>
+      <span class="bb-hint">先選砲塔、再點+號據點建造 · 點已建造砲塔可升級等級</span>
+      <button class="btn" id="toDefenseBtn">▶ 開始防禦</button>
+    </div>
   </div>
 </div>
 
@@ -200,13 +261,17 @@ const QUESTIONS = [
   {id:"div_basic_0002",topic:"除法",subtopic:"基礎除法",difficulty:2,prompt:"63 ÷ 9 = ?",answer:7,choices:[7,8,6,9],hint:"想：9 乘以幾等於 63？",skin_battle:"擊退標示 63÷9 的機械兵"}
 ];
 const ENEMIES = {
-  drone_basic:{name:"巡邏機械兵",speed_px_per_sec:36,reward_minerals:10,color:"#ff5d9e",size:18,shape:"orb"},
-  drone_fast :{name:"突擊無人機",speed_px_per_sec:62,reward_minerals:15,color:"#ffa23a",size:14,shape:"arrow"},
-  drone_heavy:{name:"裝甲機甲",speed_px_per_sec:28,reward_minerals:25,color:"#a98bff",size:24,shape:"armor"}
+  drone_basic:{name:"巡邏機械兵",speed_px_per_sec:30,reward_minerals:15,color:"#ff5d9e",size:18,shape:"orb",  hp:1,knock:0.6},
+  drone_fast :{name:"突擊無人機",speed_px_per_sec:60,reward_minerals:20,color:"#ffa23a",size:14,shape:"arrow",hp:1,knock:1.0},
+  drone_heavy:{name:"裝甲機甲",speed_px_per_sec:20,reward_minerals:30,color:"#a98bff",size:24,shape:"armor",hp:2,knock:0.3}
 };
 const TOWERS = {
-  tower_laser:{name:"擊退砲塔",attack_type:"single",knockback:60,range_px:135,cooldown:1.5,cost:{minerals:100},color:"#2ee6f0",icon:"🔫"},
-  tower_emp  :{name:"電磁震盪塔",attack_type:"area",knockback:34,range_px:105,cooldown:2.5,cost:{minerals:150},color:"#a78bff",icon:"📡"}
+  tower_laser:{name:"擊退砲塔",attack_type:"single",knockback:65,range_px:150,cooldown:1.5,cost:{minerals:100},color:"#2ee6f0",icon:"🔫",
+    desc:"單體擊退：鎖定最前方敵人，把它往回推。冷卻短、最划算的基礎砲塔。"},
+  tower_emp  :{name:"電磁震盪塔",attack_type:"area",knockback:40,range_px:110,cooldown:2.5,cost:{minerals:150},color:"#a78bff",icon:"📡",
+    desc:"範圍擊退：把範圍內所有敵人一起往回推，適合在路口攔截成群敵人。"},
+  tower_pulse:{name:"脈衝塔",attack_type:"pulse",knockback:0,range_px:0,slow:[0.5,0.4,0.3],dur:[3,5,7],cd:[5,10,15],upCost:[150,300],cost:{minerals:350},color:"#34e0a1",icon:"🌀",once:true,
+    desc:"全體減速：定時讓全場敵人減速（升級提升幅度與秒數）。每關限建一座。"}
 };
 const UPGRADE_COST=80;   // 升級基礎花費（× 目前等級）
 const KNOCK_UP=30;       // 每次升級增加的擊退距離
@@ -251,7 +316,7 @@ function loadLevel(idx){
     defense_phase:{ enemy_subtopics:cfg.subtopics, wave_composition:buildWaves(cfg) } };
 }
 function totalWaves(){ return LEVEL.defense_phase.wave_composition.length; }
-function routesForWave(w){ return w<=0?1:(w<=2?2:3); }  // 第1波1條、第2.3波2條、第4波起3條
+function routesForWave(w){ return w<=1?1:(w<=3?2:3); }  // 波次1.2:1條、波次3.4:2條、波次5+:3條
 
 /* ===== 設定 ===== */
 const SPAWN_GAP=1.1;        // 秒，同波敵人間隔
@@ -519,12 +584,12 @@ function enterBuild(){
   el('buildbar').classList.remove('hide');
   el('toDefenseBtn').textContent = state.nextWave===0 ? "▶ 開始防禦" : ("▶ 開始第 "+(state.nextWave+1)+" 波");
   const lanes=routesForWave(state.nextWave);
-  el('waveNum').textContent = state.nextWave===0 ? "佈署期" : ("休息 · 即將第 "+(state.nextWave+1)+"/"+totalWaves()+" 波");
-  el('flavor').textContent = state.nextWave===0
+  el('waveNum').textContent = "佈署期"; el('waveNum').style.fontSize="18px";
+  el('bbInfo').textContent = state.nextWave===0
     ? ("佈署期 · 第 1 波有 "+lanes+" 條路線，蓋砲塔後開始防禦")
     : ("休息片刻 · 第 "+(state.nextWave+1)+" 波會有 "+lanes+" 條路線，快升級或增建砲塔");
-  el('prompt').textContent="🛠️ 佈署中";
-  el('choices').innerHTML=""; el('hint').textContent="";
+  clearQuestion();
+  showTowerDesc();
   if(state.nextWave>0) toast("⚠ 第 "+(state.nextWave+1)+" 波："+lanes+" 條路線");
 }
 function startDefense(){
@@ -540,14 +605,14 @@ function startWave(i){
   state.spawnQueue=comp.enemies.slice();
   state.spawnTimer=0.4;
   toast(i===0?"第 1 波":("第 "+(i+1)+" 波"));
-  el('waveNum').textContent=(i+1)+"/"+totalWaves();
+  el('waveNum').textContent=(i+1)+"/"+totalWaves(); el('waveNum').style.fontSize="";
 }
 function spawnEnemy(typeId){
   const def=ENEMIES[typeId];
   const nr=activeRoutes();
   const route=Math.floor(Math.random()*nr);
   const waveMul=1+state.waveIndex*WAVE_SPEED_STEP;
-  state.enemies.push({type:typeId,def,dist:0,route,waveMul,id:Math.random()});
+  state.enemies.push({type:typeId,def,dist:0,route,waveMul,id:Math.random(),off:(Math.random()*2-1)*15,hp:def.hp||1});
 }
 function frontmostEnemy(){ let b=null,bf=-1; for(const e of state.enemies){ const f=e.dist/pathLength(e.route); if(f>bf){bf=f;b=e;} } return b; }
 function newQuestion(){ state.question=pickQuestion(); renderQuestion(); }
@@ -563,9 +628,16 @@ function answer(val,btn){
       const p=advance(front.dist,front.route);
       fireBeam(p.x,p.y); sfxFire(); impact(p.x,p.y,front.def.color);
       state.combo++;
-      floatText(p.x,p.y-30, state.combo>1?("連擊 ×"+state.combo+"！"):"擊殺！", "#bff7ff", 22);
-      state.screenFlash=0.5; state.shake=Math.max(state.shake,5);
-      destroyEnemy(front);
+      front.hp=(front.hp||1)-1;
+      if(front.hp>0){
+        // 裝甲機甲：第一次答對只削弱，需再答對 1 題才擊破
+        front.hitFlash=0.5; state.shake=Math.max(state.shake,4);
+        floatText(p.x,p.y-30,"裝甲受損！再答 1 題擊破","#ffd76a",15);
+      }else{
+        floatText(p.x,p.y-30, state.combo>1?("連擊 ×"+state.combo+"！"):"擊殺！", "#bff7ff", 22);
+        state.screenFlash=0.5; state.shake=Math.max(state.shake,5);
+        destroyEnemy(front);
+      }
     }
     if(chg==='up'){ const b=basePoint(); floatText(b[0],b[1]-46,"難度提升 ⬆","#34e0a1",16); }
     newQuestion();
@@ -651,9 +723,11 @@ function update(dt){
       state.spawnTimer-=dt;
       if(state.spawnTimer<=0){ spawnEnemy(state.spawnQueue.shift()); state.spawnTimer=SPAWN_GAP; }
     }
-    // 移動
+    // 移動（脈衝塔啟動時全體減速）
+    if(state.slowTimer>0) state.slowTimer-=dt;
+    const slow=(state.slowTimer>0)?(state.slowFactor||0.5):1;
     for(const e of state.enemies){
-      e.dist+=e.def.speed_px_per_sec*speedMul*(e.waveMul||1)*dt;
+      e.dist+=e.def.speed_px_per_sec*speedMul*(e.waveMul||1)*slow*dt;
       if(advance(e.dist,e.route).done){
         state.coreHp-=1; state.shake=12; sfxHit();
         state.enemies=state.enemies.filter(x=>x!==e);
@@ -678,12 +752,25 @@ function update(dt){
   state.enemies.forEach(e=>{ if(e.hitFlash>0)e.hitFlash-=dt; if(e.knockFlash>0)e.knockFlash-=dt; });
   state.shots.forEach(s=>s.life-=dt); state.shots=state.shots.filter(s=>s.life>0);
   if(state.screenFlash>0)state.screenFlash-=dt*2.2;
+  if(state.pulseFlash>0)state.pulseFlash-=dt*1.5;
   if(state.shake>0)state.shake-=dt*40;
 }
-function knockBack(e,px){ e.dist=Math.max(0,e.dist-px); e.knockFlash=.3; }
+function knockBack(e,px){ e.dist=Math.max(0,e.dist-px*(e.def.knock||1)); e.knockFlash=.3; }
 function updateTowers(dt){
   for(const tw of state.towers){
     if(tw.fireTimer>0){ tw.fireTimer-=dt; continue; }
+    if(tw.attack==='pulse'){
+      if(state.enemies.length){
+        const def=TOWERS[tw.type], dur=def.dur[tw.level-1], cd=def.cd[tw.level-1], sf=def.slow[tw.level-1];
+        state.slowTimer=Math.max(state.slowTimer||0,dur); state.slowFactor=sf;
+        tw.fireTimer=cd;
+        state.rings.push({x:tw.x,y:tw.y,r:12,life:.8,color:tw.color});
+        state.rings.push({x:tw.x,y:tw.y,r:34,life:.8,color:tw.color});
+        state.pulseFlash=0.6; sfxTower();
+        floatText(tw.x,tw.y-28,"全體減速 "+Math.round((1-sf)*100)+"%！","#34e0a1",16);
+      }
+      continue;
+    }
     if(tw.attack==='area'){
       const hit=[];
       for(const e of state.enemies){ const p=advance(e.dist,e.route);
@@ -722,6 +809,10 @@ function render(){
     drawShots(); drawBeams(); drawRings(); drawParticles(); drawTexts(); }
   ctx.restore();
   if(state&&state.screenFlash>0){ ctx.fillStyle="rgba(46,230,240,"+(state.screenFlash*0.22)+")"; ctx.fillRect(0,0,W,H); }
+  if(state&&state.pulseFlash>0){ ctx.fillStyle="rgba(52,224,161,"+(state.pulseFlash*0.16)+")"; ctx.fillRect(0,0,W,H); }
+  if(state&&state.slowTimer>0){ ctx.save();ctx.globalAlpha=.85;ctx.fillStyle="#34e0a1";
+    ctx.font="800 14px 'Baloo 2','Noto Sans TC',sans-serif";ctx.textAlign="center";
+    ctx.fillText("🌀 全體減速中 "+state.slowTimer.toFixed(1)+"s", W/2, 18);ctx.restore(); }
 }
 function drawRings(){
   for(const r of state.rings){ ctx.globalAlpha=Math.max(0,r.life*2.2);
@@ -751,12 +842,19 @@ function drawTower(tw){
   ctx.save();ctx.translate(tw.x,tw.y);
   ctx.fillStyle="#16204d";ctx.beginPath();ctx.arc(0,0,12,0,6.28);ctx.fill();
   ctx.strokeStyle=tw.color;ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(0,0,12,0,6.28);ctx.stroke();
-  ctx.rotate(tw.aim||0);
-  if(tw.attack==='single'){ ctx.fillStyle=tw.color;roundRect(-2,-3.5,18,7,2);ctx.fill();
-    ctx.fillStyle="#fff";ctx.beginPath();ctx.arc(0,0,3.5,0,6.28);ctx.fill();
-  }else{ ctx.fillStyle=tw.color;ctx.beginPath();ctx.arc(0,0,8,0,6.28);ctx.fill();
-    ctx.strokeStyle="#fff";ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(0,0,8,0,6.28);ctx.stroke();
-    ctx.fillStyle="#fff";ctx.beginPath();ctx.arc(0,0,2.5,0,6.28);ctx.fill();}
+  if(tw.attack==='pulse'){
+    ctx.strokeStyle=tw.color;ctx.lineWidth=2;
+    for(let k=1;k<=2;k++){ ctx.globalAlpha=.7/k;
+      ctx.beginPath();ctx.arc(0,0,3+k*3.4+Math.sin(state.time*4+k)*1.2,0,6.28);ctx.stroke(); }
+    ctx.globalAlpha=1;ctx.fillStyle="#eafff5";ctx.beginPath();ctx.arc(0,0,3,0,6.28);ctx.fill();
+  }else{
+    ctx.rotate(tw.aim||0);
+    if(tw.attack==='single'){ ctx.fillStyle=tw.color;roundRect(-2,-3.5,18,7,2);ctx.fill();
+      ctx.fillStyle="#fff";ctx.beginPath();ctx.arc(0,0,3.5,0,6.28);ctx.fill();
+    }else{ ctx.fillStyle=tw.color;ctx.beginPath();ctx.arc(0,0,8,0,6.28);ctx.fill();
+      ctx.strokeStyle="#fff";ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(0,0,8,0,6.28);ctx.stroke();
+      ctx.fillStyle="#fff";ctx.beginPath();ctx.arc(0,0,2.5,0,6.28);ctx.fill();}
+  }
   ctx.restore();
   // 等級標示
   const lv=tw.level||1;
@@ -812,6 +910,9 @@ function poly(n,r,rot){ctx.beginPath();for(let i=0;i<n;i++){const a=rot+i/n*6.28
 function drawEnemy(e,isFront){
   const p=advance(e.dist,e.route), s=e.def.size, col=e.def.color, t=state.time;
   const ahead=advance(e.dist+4,e.route), ang=Math.atan2(ahead.y-p.y,ahead.x-p.x);
+  // 側向錯開：沿行進方向的垂直向位移，避免同路線敵人長時間重疊（仍可被超越）
+  const off=e.off||0;
+  if(off){ const px=-Math.sin(ang)*off, py=Math.cos(ang)*off; p.x+=px; p.y+=py; }
   if(e.hitFlash>0){ctx.fillStyle="rgba(255,70,100,"+Math.min(.6,e.hitFlash*1.5)+")";
     ctx.beginPath();ctx.arc(p.x,p.y,s+13,0,6.28);ctx.fill();}
   if(e.knockFlash>0){ctx.fillStyle="rgba(46,230,240,"+Math.min(.5,e.knockFlash*1.5)+")";
@@ -902,6 +1003,31 @@ function endGame(win){
   clearQuestion();
 }
 
+/* ===== 介紹／規則（動畫） ===== */
+function showIntro(){
+  state=null; if(raf){cancelAnimationFrame(raf);raf=null;}
+  el('game').classList.add('cover');
+  el('buildbar').classList.add('hide');
+  ctx.clearRect(0,0,W,H);
+  el('waveNum').textContent="選單"; el('cores').innerHTML=""; el('minerals').textContent="0";
+  clearQuestion();
+  overlay.classList.remove('hide');
+  let stars=""; for(let i=0;i<26;i++){ stars+='<i style="left:'+(Math.random()*100).toFixed(1)+'%;top:'+(Math.random()*100).toFixed(1)+'%;animation-delay:'+(Math.random()*2.4).toFixed(2)+'s"></i>'; }
+  overlay.innerHTML = `
+    <div class="intro-stars">${stars}</div>
+    <div class="intro">
+      <div class="intro-rocket">🚀</div>
+      <div class="intro-title">星球拓荒者</div>
+      <div class="intro-sub">用數學火力，守護你的星球基地！</div>
+      <div class="rule"><span class="ri">🛡️</span><span class="rt"><b>守護基地核心</b>：機械兵會沿路線從上方逼近基地，核心被攻破 <b>5</b> 次就失敗。</span></div>
+      <div class="rule"><span class="ri">🧮</span><span class="rt"><b>答對數學題擊殺敵人</b>：畫面下方出現題目，答對就消滅<b>最前方</b>的敵人並獲得水晶（裝甲機甲要答對 2 題）。</span></div>
+      <div class="rule"><span class="ri">🔫</span><span class="rt"><b>建造砲塔拖延敵人</b>：用水晶蓋雷射／電磁／脈衝塔，只能<b>擊退或減速</b>，幫你爭取答題時間。</span></div>
+      <div class="rule"><span class="ri">🌊</span><span class="rt"><b>波次越後越難</b>：每關 5 波，敵人數量、速度與來襲路線逐波增加，撐過最後一波就過關！</span></div>
+      <button class="btn" id="introBtn">進入星圖 ▶</button>
+    </div>`;
+  el('introBtn').onclick=()=>{ initAudio(); showMenu(); };
+}
+
 /* ===== 關卡選單 ===== */
 function showMenu(){
   state=null; if(raf){cancelAnimationFrame(raf);raf=null;}
@@ -939,8 +1065,8 @@ function rebuildTower(s){
   const def=TOWERS[s.type];
   return {slotIndex:s.slotIndex, x:SLOTS[s.slotIndex][0]*W, y:SLOTS[s.slotIndex][1]*H,
     type:s.type, level:s.level, range:def.range_px,
-    knockback:def.knockback+(s.level-1)*KNOCK_UP, cooldown:def.cooldown,
-    fireTimer:0, color:def.color, attack:def.attack_type, aim:0};
+    knockback:(def.knockback||0)+(def.attack_type==='pulse'?0:(s.level-1)*KNOCK_UP),
+    cooldown:(def.cd?def.cd[s.level-1]:def.cooldown), fireTimer:0, color:def.color, attack:def.attack_type, aim:0};
 }
 function resumeLevel(i){
   const sv=resume[i];
@@ -973,11 +1099,15 @@ function backToMenu(){
 }
 
 /* ===== 建造互動 ===== */
+function showTowerDesc(){
+  const d=TOWERS[selectedTower]; if(!d)return;
+  el('twDesc').innerHTML = d.icon+" <b>"+d.name+"</b>（"+d.cost.minerals+"💎）— "+d.desc;
+}
 function bindBuild(){
   document.querySelectorAll('.tw-btn').forEach(b=>{
     b.onclick=()=>{ selectedTower=b.dataset.tw;
       document.querySelectorAll('.tw-btn').forEach(x=>x.classList.remove('sel'));
-      b.classList.add('sel'); };
+      b.classList.add('sel'); showTowerDesc(); };
   });
   el('toDefenseBtn').onclick=startDefense;
   el('toMenuBtn').onclick=backToMenu;
@@ -998,23 +1128,27 @@ function bindBuild(){
 function tryBuild(i,sx,sy){
   if(state.towers.some(t=>t.slotIndex===i))return;
   const def=TOWERS[selectedTower];
+  if(def.once && state.towers.some(t=>t.type===selectedTower)){ floatText(sx,sy-20,"每關限建一座","#ff5d6d",14); return; }
   if(state.minerals<def.cost.minerals){ floatText(sx,sy-20,"礦物不足","#ff5d6d",15); return; }
   state.minerals-=def.cost.minerals; drawHud(); sfxBuild();
   state.towers.push({slotIndex:i,x:sx,y:sy,type:selectedTower,level:1,range:def.range_px,
-    knockback:def.knockback,cooldown:def.cooldown,fireTimer:0,color:def.color,attack:def.attack_type,aim:0});
+    knockback:def.knockback||0,cooldown:(def.cd?def.cd[0]:def.cooldown),fireTimer:0,color:def.color,attack:def.attack_type,aim:0});
   state.rings.push({x:sx,y:sy,r:6,life:.4,color:def.color});
 }
 function tryUpgrade(tw){
   if(tw.level>=TOWER_MAX_LV){ floatText(tw.x,tw.y-20,"已滿級","#9fb2d8",13); return; }
-  const cost=UPGRADE_COST*tw.level;
+  const def=TOWERS[tw.type];
+  const cost=def.upCost ? def.upCost[tw.level-1] : UPGRADE_COST*tw.level;
   if(state.minerals<cost){ floatText(tw.x,tw.y-20,"升級需 "+cost+"💎","#ff5d6d",13); return; }
-  state.minerals-=cost; tw.level++; tw.knockback+=KNOCK_UP; drawHud(); sfxBuild();
+  state.minerals-=cost; tw.level++;
+  if(tw.attack==='pulse'){ floatText(tw.x,tw.y-22,"Lv"+tw.level+" 減速 "+Math.round((1-def.slow[tw.level-1])*100)+"% · "+def.dur[tw.level-1]+"秒","#34e0a1",14); }
+  else { tw.knockback+=KNOCK_UP; floatText(tw.x,tw.y-22,"Lv"+tw.level+" 擊退↑","#7af2f8",15); }
+  drawHud(); sfxBuild();
   state.rings.push({x:tw.x,y:tw.y,r:6,life:.4,color:tw.color});
-  floatText(tw.x,tw.y-22,"Lv"+tw.level+" 擊退↑","#7af2f8",15);
 }
 
 /* ===== 啟動 ===== */
 layout(); bindBuild();
 window.addEventListener('resize',()=>{ if(state)drawHud(); });
-showMenu();
+showIntro();
 </script>

@@ -407,10 +407,10 @@
       const h=document.createElement('div'); h.className='heart';
       h.textContent=hearts[rnd(0,hearts.length-1)];
       h.style.left=Math.random()*100+'vw'; h.style.fontSize=(22+Math.random()*24)+'px';
-      const dur=2+Math.random()*1.8;
-      h.style.animationDuration=dur+'s'; h.style.animationDelay=(Math.random()*0.5)+'s';
+      const dur=1.1+Math.random()*0.5;
+      h.style.animationDuration=dur+'s'; h.style.animationDelay=(Math.random()*0.3)+'s';
       h.style.setProperty('--rot',(Math.random()*140-70)+'deg');
-      box.appendChild(h); setTimeout(()=>h.remove(),(dur+0.7)*1000);
+      box.appendChild(h); setTimeout(()=>h.remove(),2000);
     }
   }
   function confetti(){
@@ -421,10 +421,10 @@
       c.style.left=Math.random()*100+'vw'; c.style.background=colors[rnd(0,colors.length-1)];
       c.style.width=(6+Math.random()*6)+'px'; c.style.height=(10+Math.random()*8)+'px';
       if(Math.random()<0.4) c.style.borderRadius='50%';
-      const dur=2.2+Math.random()*1.8;
-      c.style.animationDuration=dur+'s'; c.style.animationDelay=(Math.random()*0.4)+'s';
+      const dur=1.2+Math.random()*0.5;
+      c.style.animationDuration=dur+'s'; c.style.animationDelay=(Math.random()*0.25)+'s';
       c.style.setProperty('--rot',(Math.random()*720+360)+'deg');
-      box.appendChild(c); setTimeout(()=>c.remove(),(dur+0.6)*1000);
+      box.appendChild(c); setTimeout(()=>c.remove(),2000);
     }
   }
 
